@@ -1,36 +1,38 @@
 import * as React from 'react'
-import { 
-  createRouter, 
-  RouterProvider, 
-  createRootRoute, 
-  createRoute as createTanStackRoute, 
-  Outlet 
+import {
+  createRouter,
+  RouterProvider,
+  createRootRoute,
+  createRoute as createTanStackRoute,
+  Outlet
 } from '@tanstack/react-router'
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "./pages/Index";
-import Header from './components/Header'; // Import the Header component
-import WeatherDashboardPage from './pages/WeatherDashboardPage'; // Import the WeatherDashboardPage
-import AboutPage from './pages/About'; // Import the AboutPage
-import ContactPage from './pages/Contact'; // Import the ContactPage
-import NotFound from './pages/NotFound'; // Import the NotFound page
+import NotFound from "./pages/NotFound";
+import Layout from './components/Layout';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import WeatherDashboardPage from './pages/WeatherDashboardPage'; // Import the new dashboard page
 
 const queryClient = new QueryClient();
 
-// Create root route
+// Create root route with a layout
 const rootRoute = createRootRoute({
   component: () => (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        {/* The Header is now part of the individual pages or a layout component if desired */}
-        <Outlet />
+        <Layout> {/* Layout component wraps the Outlet */}
+          <Outlet />
+        </Layout>
       </TooltipProvider>
     </QueryClientProvider>
   ),
+  notFoundComponent: NotFound, // Set NotFound component for the root route
 })
 
 // Create index route
@@ -40,46 +42,37 @@ const indexRoute = createTanStackRoute({
   component: Index,
 })
 
-// Create weather dashboard route
-const weatherRoute = createTanStackRoute({
+// Create Weather Dashboard route
+const weatherDashboardRoute = createTanStackRoute({
   getParentRoute: () => rootRoute,
-  path: '/weather',
+  path: '/dashboard',
   component: WeatherDashboardPage,
 })
 
-// Create about page route
+// Create About route
 const aboutRoute = createTanStackRoute({
   getParentRoute: () => rootRoute,
   path: '/about',
-  component: AboutPage,
+  component: About,
 })
 
-// Create contact page route
+// Create Contact route
 const contactRoute = createTanStackRoute({
   getParentRoute: () => rootRoute,
   path: '/contact',
-  component: ContactPage,
+  component: Contact,
 })
-
-// Create a 404 Not Found route
-const notFoundRoute = createTanStackRoute({
-  getParentRoute: () => rootRoute,
-  path: '*', // Catch-all route for 404
-  component: NotFound,
-});
-
 
 // Create route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  weatherRoute,
+  weatherDashboardRoute,
   aboutRoute,
   contactRoute,
-  notFoundRoute, // Add the 404 route
 ])
 
 // Create router with proper TypeScript configuration
-const router = createRouter({ 
+const router = createRouter({
   routeTree,
   defaultPreload: 'intent' as const,
   defaultPreloadStaleTime: 0,
