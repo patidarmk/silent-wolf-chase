@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getWeatherIcon, WeatherData } from "@/data/weather";
-import { Droplet, Wind, Gauge, Sunrise, Sunset } from 'lucide-react';
+import { getWeatherIcon, CurrentWeather } from "@/data/weather"; // Changed WeatherData to CurrentWeather
+import { Droplet, Wind, Gauge, Sunrise, Sunset, Sun } from 'lucide-react'; // Added Sun import
 
 interface CurrentWeatherCardProps {
-  data: WeatherData;
+  data: CurrentWeather; // Changed prop type to CurrentWeather
 }
 
 export default function CurrentWeatherCard({ data }: CurrentWeatherCardProps) {
@@ -21,7 +21,7 @@ export default function CurrentWeatherCard({ data }: CurrentWeatherCardProps) {
         <div className="text-6xl font-extrabold text-gray-900 dark:text-gray-50 mb-2">
           {data.temperature}°{data.unit}
         </div>
-        <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">{data.condition}</p>
+        <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">{data.description}</p>
 
         <div className="grid grid-cols-2 gap-4 text-gray-700 dark:text-gray-200">
           <div className="flex items-center space-x-2">
@@ -37,7 +37,7 @@ export default function CurrentWeatherCard({ data }: CurrentWeatherCardProps) {
             <span>Pressure: {data.pressure} hPa</span>
           </div>
           <div className="flex items-center space-x-2">
-            <Sun className="h-5 w-5 text-blue-400" />
+            <Sun className="h-5 w-5 text-blue-400" /> {/* This Sun is now correctly imported */}
             <span>UV Index: {data.uvIndex}</span>
           </div>
           <div className="flex items-center space-x-2">
